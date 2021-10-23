@@ -4,6 +4,10 @@
   "license": "MIT",
   "type": "module",
   "description": "A collection of personal utilities I use between projects.",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/jamiller619/vulgar.utils"
+  },
   "scripts": {
     "build": "yarn clean && yarn tsc -b -v && yarn package",
     "package": "node scripts/build.js",
