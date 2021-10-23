@@ -1,0 +1,24 @@
+{
+  "name": "@vulgar/utils",
+  "version": "1.0.0",
+  "license": "MIT",
+  "type": "module",
+  "description": "A collection of personal utilities I use between projects.",
+  "scripts": {
+    "build": "yarn clean && yarn tsc -b -v && yarn package",
+    "package": "node scripts/build.js",
+    "clean": "yarn rimraf dist *.tsbuildinfo",
+    "lint": "yarn prettier --write './src/**/*.{ts,tsx}'"
+  },
+  "devDependencies": {
+    "@typescript-eslint/eslint-plugin": "^5.1.0",
+    "@typescript-eslint/parser": "^5.1.0",
+    "eslint": "^8.1.0",
+    "eslint-config-prettier": "^8.3.0",
+    "eslint-plugin-prettier": "^4.0.0",
+    "prettier": "^2.4.1",
+    "prettier-plugin-organize-imports": "^2.3.4",
+    "rimraf": "^3.0.2",
+    "typescript": "^4.4.4"
+  }
+}
