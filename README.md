@@ -11,7 +11,7 @@ was intentional.
 Instead, just import what you need directly:
 
 ```js
-import fetchRetry from '@vulgar/utils/log'
+import log from '@vulgar/utils/log'
 ```
 
 ## Install
