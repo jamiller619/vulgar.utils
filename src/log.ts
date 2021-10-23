@@ -55,15 +55,18 @@ function log(...params: LogMessageType[]): void {
 /**
  * Information-level logging (same as `log`)
  */
-log.prototype.info = (...params: LogMessageType[]): void => {
+export const info = (...params: LogMessageType[]): void => {
   logMessages(console.log, ...params)
 }
 
 /**
  * Error-level logging
  */
-log.prototype.error = (...params: LogMessageType[]): void => {
+export const error = (...params: LogMessageType[]): void => {
   logMessages(console.error, ...params)
 }
+
+log.prototype.info = info
+log.prototype.error = error
 
 export default log as Logger
