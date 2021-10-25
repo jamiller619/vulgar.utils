@@ -1,12 +1,12 @@
 type PossibleLogMessageType = unknown | Record<string, unknown>
 type LogMessageType = PossibleLogMessageType | PossibleLogMessageType[]
 
-type Logger = {
-  info: (...params: LogMessageType[]) => void
-  error: (...params: LogMessageType[]) => void
-  group: (label?: string) => void
-  groupEnd: () => void
-  (...params: LogMessageType[]): void
+declare class Logger {
+  info: (...params: LogMessageType[]) => Logger
+  error: (...params: LogMessageType[]) => Logger
+  group: (label?: string) => Logger
+  groupEnd: () => Logger
+  constructor(...params: LogMessageType[])
 }
 
 const isObject = (obj: unknown) => {
@@ -48,12 +48,11 @@ const logMessages = (
  * Log anything, with properly formatted objects. Arrays are
  * treated as pass throughs, so if you don't want formatting
  * on an object, wrap it in an array.
+ * Supports chaining.
  * @param params Anything you can pass to console.log
  */
-function log(this: Logger, ...params: LogMessageType[]): Logger {
+function Logger(...params: LogMessageType[]) {
   logMessages(console.log, ...params)
-
-  return this
 }
 
 /**
@@ -73,25 +72,32 @@ export const error = (...params: LogMessageType[]): void => {
 export const group = (label?: string) => console.group(label)
 export const groupEnd = () => console.groupEnd()
 
-log.prototype.info = function (...args: LogMessageType[]): Logger {
+Logger.prototype.info = function (...args: LogMessageType[]): Logger {
   info(...args)
 
   return this
 }
-log.prototype.error = function (...args: LogMessageType[]): Logger {
+Logger.prototype.error = function (...args: LogMessageType[]): Logger {
   error(...args)
 
   return this
 }
-log.prototype.group = function (label: string): Logger {
+Logger.prototype.group = function (label?: string): Logger {
   group(label)
 
   return this
 }
-log.prototype.groupEnd = function (): Logger {
+Logger.prototype.groupEnd = function (): Logger {
   groupEnd()
 
   return this
 }
+
+const log = (...params: LogMessageType[]): Logger => new Logger(...params)
+
+log.info = Logger.prototype.info.bind(log)
+log.error = Logger.prototype.error.bind(log)
+log.group = Logger.prototype.group.bind(log)
+log.groupEnd = Logger.prototype.groupEnd.bind(log)
 
 export default log
