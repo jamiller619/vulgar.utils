@@ -4,6 +4,8 @@ type LogMessageType = PossibleLogMessageType | PossibleLogMessageType[]
 type Logger = {
   info: (...params: LogMessageType[]) => void
   error: (...params: LogMessageType[]) => void
+  group: (label?: string) => void
+  groupEnd: () => void
   (...params: LogMessageType[]): void
 }
 
@@ -48,8 +50,10 @@ const logMessages = (
  * on an object, wrap it in an array.
  * @param params Anything you can pass to console.log
  */
-function log(...params: LogMessageType[]): void {
+function log(this: Logger, ...params: LogMessageType[]): Logger {
   logMessages(console.log, ...params)
+
+  return this
 }
 
 /**
@@ -66,7 +70,28 @@ export const error = (...params: LogMessageType[]): void => {
   logMessages(console.error, ...params)
 }
 
-log.prototype.info = info
-log.prototype.error = error
+export const group = (label?: string) => console.group(label)
+export const groupEnd = () => console.groupEnd()
 
-export default log as Logger
+log.prototype.info = function (...args: LogMessageType[]): Logger {
+  info(...args)
+
+  return this
+}
+log.prototype.error = function (...args: LogMessageType[]): Logger {
+  error(...args)
+
+  return this
+}
+log.prototype.group = function (label: string): Logger {
+  group(label)
+
+  return this
+}
+log.prototype.groupEnd = function (): Logger {
+  groupEnd()
+
+  return this
+}
+
+export default log
